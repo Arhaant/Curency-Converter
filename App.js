@@ -1,6 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import { Component } from 'react';
 import { StyleSheet, Text, View, Pressable, TextInput } from 'react-native';
+import Modal from 'react-native-modal';
+import { FlatList } from 'react-native-gesture-handler';
+
 
 
 export default class App extends Component{
@@ -9,6 +12,8 @@ export default class App extends Component{
     this.state={
       textorsomething: '',
       sankhya: '',
+      modalVisible: false,
+      currencykachaabiʑ: {}
     }
   }
 
@@ -29,18 +34,52 @@ export default class App extends Component{
     }
   }
 
+  modalDisplay=(bullies)=>{
+    this.setState({modalVisible: bullies})
+  }
+
+  getKΣŶ=()=>{
+    axios
+    .get('https://freecurrencyapi.net/api/v2/latest?apikey=91458540-8b09-11ec-8db9-5d3739fdde2c')
+    .then(response=>{
+      this.setState({
+        currencykachaabiʑ: response.data.data
+      })
+      .catch(errΘr=>{
+        alert(errΘr.message)
+      })
+    })
+  }
+
+  renderItem=({item})=>{
+    return (
+      <View>
+        <Text>{item}</Text>
+      </View>
+    )
+  }
+
   render(){
+    if(Object.keys(this.state.currencykachaabiʑ).length === 0 ){
+      return (
+        <View>
+          <Text>Loading........Go get something to eat 🍔</Text>
+        </View>
+      )
+    }else{
+      let currency_ka_chaabiʑ = Object.keys(this.state.currencykachaabiʑ)
+    
   return (
     <View style={styles.container}>
        <StatusBar style="auto" />
-      <View style={styles.titleContainer}>
+      <View style={styles.titleContainer}>  
         <Text style={styles.titleText}>Currency Converter</Text>
       </View>
 
       <View style={styles.currencyMainContainer}>
         <View style={styles.currencySubContainer}>
           <Pressable style={styles.currencyQuarterContainer}>
-            <Text style={styles.currencyTextile}>Currency 1</Text>
+            <Text style={styles.currencyTextile} onPress={()=>this.modalDisplay(true)}>Currency 1</Text>
           </Pressable>
 
           <Pressable style={styles.currencyQuarterContainer}>
@@ -140,10 +179,32 @@ export default class App extends Component{
 
 
       </View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={this.state.modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View>
+          <FlatList 
+          keyExtractor={(item, index)=>index.toString()}
+          data={currency_ka_chaabiʑ}
+          renderItem = {this.renderItem}
+          >
+
+          </FlatList>
+        </View>
+        
+      </Modal>
     </View>
   );
 }
 
+
+  }
 }//render end
 
 
